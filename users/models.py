@@ -24,7 +24,7 @@ class UserCoupon(models.Model):
 
     class Meta:
         db_table = "user_coupons"
-    
+
 class Coupon(TimeStampModel):
     name             = models.CharField(max_length = 50)
     discount_rate    = models.PositiveIntegerField(null = True)

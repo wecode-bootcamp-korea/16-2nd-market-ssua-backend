@@ -30,7 +30,7 @@ class ProductGroup(TimeStampModel):
         db_table = "product_groups"
 
 class Relation(models.Model):
-    relate_product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "relate")
+    relate_product_group  = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "relate")
     related_product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "related")
 
     class Meta:
@@ -50,7 +50,7 @@ class Product(TimeStampModel):
 class ProductGroupImage(models.Model):
     product_group    = models.ForeignKey("ProductGroup", on_delete = models.CASCADE)
     url              = models.URLField(max_length = 500)
-    
+
     class Meta:
         db_table = "product_group_images"
 
@@ -72,7 +72,6 @@ class Question(TimeStampModel):
     product_group    = models.ForeignKey("ProductGroup", on_delete = models.CASCADE)
     title            = models.CharField(max_length = 120)
     content          = models.TextField()
-    
+
     class Meta:
         db_table = "questions"
-    
