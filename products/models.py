@@ -24,13 +24,14 @@ class ProductGroup(TimeStampModel):
     main_description   = models.TextField()
     detail_description = models.TextField()
     discount_rate      = models.PositiveIntegerField()
+    price              = models.PositiveIntegerField()
 
     class Meta:
         db_table = "product_groups"
 
 class Relation(models.Model):
-    product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "relate")
-    product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "related")
+    relate_product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "relate")
+    related_product_group = models.ForeignKey("ProductGroup", on_delete = models.CASCADE, related_name = "related")
 
     class Meta:
         db_table = "relations"

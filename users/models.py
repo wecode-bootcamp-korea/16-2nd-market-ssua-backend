@@ -9,7 +9,7 @@ class Grade(models.Model):
         db_table = "grades"
 
 class User(TimeStampModel):
-    email        = models.EmailField(max_length = 245)
+    email        = models.EmailField(max_length = 245, unique = True)
     password     = models.CharField(max_length = 100)
     name         = models.CharField(max_length = 100)
     address      = models.CharField(max_length = 400)
@@ -41,17 +41,17 @@ class Point(TimeStampModel):
     title            = models.CharField(max_length = 200)
     published_dt     = models.DateField()
     end_dt           = models.DateField()
-    potin_status     = models.ForeignKey("PointStatus", on_delete = models.CASCADE)
+    status           = models.ForeignKey("PointStatus", on_delete = models.CASCADE)
 
     class Meta:
         db_table = "points"
 
 class PointStatus(TimeStampModel):
-    name = models.CharField(max_length = 45, default = "사용전")
+    name = models.CharField(max_length = 45)
 
     class Meta:
         db_table = "point_statuses"
-    
+
 class Destination(models.Model):
     address          = models.CharField(max_length = 200)
     main_address     = models.BooleanField(default = True)
