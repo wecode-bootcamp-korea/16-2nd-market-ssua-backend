@@ -4,8 +4,10 @@ import json
 from django.http        import JsonResponse
 from django.views       import View
 from django.db.models   import Count
+from decorators.utils   import login_required
 from django.core.cache  import cache
 
+from users.models     import User
 from .models          import (
     Category,
     CategoryProduct,
@@ -13,7 +15,8 @@ from .models          import (
     ProductGroup,
     ProductGroupImage,
     ProductGroupPackageType,
-    Relation
+    Relation,
+    Question
 )
 
 class CategoriesView(View):
@@ -104,10 +107,59 @@ class ProductView(View):
                         "related_product_name"      : relate_product.related_product_group.name,
                         "related_product_price"     : relate_product.related_product_group.price,
                         "related_product_thumbnail" : relate_product.related_product_group.thumbnail
-                    } for relate_product in product_group.relate.all().select_related("related_product_group")]
+                    } for relate_product in product_group.relate.all().select_related("related_product_group")],
+
+                    "question" :[{
+                        "product_group_id" : question.product_group.id,
+                        "question_id"      : question.id,
+                        "user_name"        : question.user.name,
+                        "title"            : question.title,
+                    } for question in product_group.question_set.all()]
                 }
                 cache.set(f"product_group_{product_group_id}", context)
             return JsonResponse(context, status=200)
 
         except ProductGroup.DoesNotExist:
             return JsonResponse({"error": "PRODUCT_DOES_NOT_EXIST"}, status=400)
+
+class QuestionView(View):
+    @login_required
+    def post(self, request, product_group_id):
+        try:
+            data = json.loads(request.body)
+
+            Question.objects.create(
+                user             = request.user,
+                product_group_id = product_group_id,
+                title            = data['title'],
+                content          = data['content']
+            )
+
+            return JsonResponse({"message": "SUCCESS"}, status=201)
+
+        except KeyError:
+            return JsonResponse({"error": "KEY_ERROR"}, status=400)
+
+    @login_required
+    def put(self, request, product_group_id, question_id):
+        try:
+            data     = json.loads(request.body)
+            question = Question.objects.get(user = request.user, id = question_id)
+
+            question.title   = data.get('title')
+            question.content = data.get('content')
+            question.save()
+
+            return JsonResponse({"message": "SUCCESS"}, status=200)
+
+        except Question.DoesNotExist:
+            return JsonResponse({"error": "QUESTION_DOES_NOT_EXIST"}, status=400)
+
+    @login_required
+    def delete(self, request, product_group_id, question_id):
+        try:
+            Question.objects.get(user = request.user, id = question_id).delete()
+            return JsonResponse({"message": "SUCCESS"}, status=200)
+
+        except Question.DoesNotExist:
+            return JsonResponse({"error": "QUESTION_DOES_NOT_EXIST"}, status=400)
