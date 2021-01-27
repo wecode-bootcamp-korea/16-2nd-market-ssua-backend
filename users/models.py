@@ -1,23 +1,22 @@
 from django.db  import models
 from utils      import TimeStampModel
 
-class User(TimeStampModel):
-    identify     = models.CharField(max_length = 45)
-    password     = models.CharField(max_length = 100)
-    name         = models.CharField(max_length = 100)
-    email        = models.EmailField(max_length = 245)
-    address      = models.CharField(max_length = 400)
-    grade        = models.ForeignKey("Grade", on_delete = models.CASCADE)
-
-    class Meta:
-        db_table = "users"
-
 class Grade(models.Model):
     name         = models.CharField(max_length = 45)
     accur_rate   = models.PositiveIntegerField()
 
     class Meta:
         db_table = "grades"
+
+class User(TimeStampModel):
+    email        = models.EmailField(max_length = 245)
+    password     = models.CharField(max_length = 100)
+    name         = models.CharField(max_length = 100)
+    address      = models.CharField(max_length = 400)
+    grade        = models.ForeignKey("Grade", on_delete = models.CASCADE, default = 6)
+
+    class Meta:
+        db_table = "users"
 
 class UserCoupon(models.Model):
     user     = models.ForeignKey("User", on_delete = models.CASCADE)
@@ -42,23 +41,17 @@ class Point(TimeStampModel):
     title            = models.CharField(max_length = 200)
     published_dt     = models.DateField()
     end_dt           = models.DateField()
+    potin_status     = models.ForeignKey("PointStatus", on_delete = models.CASCADE)
 
     class Meta:
         db_table = "points"
 
 class PointStatus(TimeStampModel):
-    point = models.ForeignKey("Point", on_delete = models.CASCADE)
-    status = models.ForeignKey("Status", on_delete = models.CASCADE)
+    name = models.CharField(max_length = 45, default = "사용전")
 
     class Meta:
         db_table = "point_statuses"
-
-class Status(models.Model):
-    name = models.CharField(max_length = 200)
-
-    class Meta:
-        db_table ="statuses"
-
+    
 class Destination(models.Model):
     address          = models.CharField(max_length = 200)
     main_address     = models.BooleanField(default = True)

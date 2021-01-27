@@ -2,7 +2,7 @@ from django.db  import models
 from utils      import TimeStampModel
 
 class OrderItem(TimeStampModel):
-    product    = models.ForeignKey("products.Product", on_delete = models.CASCADE)
+    product          = models.ForeignKey("products.Product", on_delete = models.CASCADE)
     order            = models.ForeignKey("Order", on_delete = models.CASCADE)
     quantity         = models.PositiveIntegerField()
 
