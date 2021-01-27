@@ -140,3 +140,4 @@ my_settings.py
 .DS_Store
 .vscode/
 *.csv
+management/
