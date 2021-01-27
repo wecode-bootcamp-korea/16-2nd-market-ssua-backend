@@ -11,14 +11,13 @@ class OrderItem(TimeStampModel):
 
 class Order(TimeStampModel):
     user             = models.ForeignKey("users.User", on_delete = models.CASCADE)
-    user_coupon      = models.ForeignKey("users.UserCoupon", on_delete = models.CASCADE)
     delivery_price   = models.PositiveIntegerField()
+    status           = models.ForeignKey("OrderStatus", on_delete = models.CASCADE, default = 1)
 
     class Meta:
         db_table = "orders"
 
 class OrderStatus(TimeStampModel):
-    order   = models.ForeignKey("Order", on_delete = models.CASCADE)
     name    = models.CharField(max_length = 50)
     
     class Meta:
