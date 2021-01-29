@@ -23,6 +23,7 @@ class UserSignUpTest(TestCase):
         
     def tearDown(self):
         User.objects.all().delete()
+        
     def test_user_sign_up_success(self):
         data = {
             "email" : "ddalkigum@gmail.com",

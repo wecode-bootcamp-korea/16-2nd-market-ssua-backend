@@ -1,4 +1,7 @@
-from django.db  import models
+from django.db                   import models
+from django.db.models            import F, Sum, ExpressionWrapper
+from django.db.models.functions  import Ceil
+
 from utils      import TimeStampModel
 
 class Grade(models.Model):
@@ -17,6 +20,17 @@ class User(TimeStampModel):
 
     class Meta:
         db_table = "users"
+
+    @property
+    def get_total_price(self):
+        total_price = self.order_set.annotate(sum_price = 
+        ExpressionWrapper(Ceil(Sum((F("orderitem__product__price") * 
+        (100 - F("orderitem__product__product_group__discount_rate")) * 0.01) * 
+        F("orderitem__quantity"))),
+        output_field = models.IntegerField()))
+        if total_price[0].sum_price is not None:
+            return total_price[0].sum_price
+        return 0
 
 class UserCoupon(models.Model):
     user     = models.ForeignKey("User", on_delete = models.CASCADE)

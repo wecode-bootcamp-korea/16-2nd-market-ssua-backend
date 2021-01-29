@@ -47,6 +47,14 @@ class Product(TimeStampModel):
     class Meta:
         db_table = "products"
 
+    @property
+    def discount_price(self):
+        discount_rate = self.product_group.discount_rate
+        if discount_rate != 0:
+            discount_price = self.price - (self.price * discount_rate / 100)
+            return int(discount_price)
+        return 0
+
 class ProductGroupImage(models.Model):
     product_group    = models.ForeignKey("ProductGroup", on_delete = models.CASCADE)
     url              = models.URLField(max_length = 500)

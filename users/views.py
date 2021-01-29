@@ -24,7 +24,7 @@ class UserSignUpView(View):
                 return JsonResponse({"message":"USER_ALREADY_EXIST"}, status = 400)
 
             clean_password = bcrypt.hashpw(re_password.encode("utf-8"), salt = bcrypt.gensalt()).decode()
-            User.objects.create(email = email, password = clean_password, name = name)
+            User.objects.create(email = clean_email, password = clean_password, name = name)
             return JsonResponse({"message":"SUCCESS"}, status = 201)
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"}, status = 400)
