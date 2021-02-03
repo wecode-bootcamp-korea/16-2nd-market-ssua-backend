@@ -106,6 +106,7 @@ class OrderView(View):
             Sum(F("orderitem__product__price") * F("orderitem__quantity"))).get("original_sum_price")
         
         total_price                  = user.get_total_price
+        context["total_price"]       = total_price
         context["point"]             = math.ceil(user.grade.accur_rate * 0.01 * total_price)
         context["delivery_price"]    = order.delivery_price if total_price < MEET_AMOUNT else NONE_DELIVERY_PRICE
         context["user_address"]      = user.address if user.address is not None else "서울특별시 마포구 만리재옛길"

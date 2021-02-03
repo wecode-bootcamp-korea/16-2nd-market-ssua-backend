@@ -59,7 +59,7 @@ class KakaoSignIn(View):
             profile          = profile_json.json()
             nickname         = profile.get("kakao_account")["profile"]["nickname"]
             email            = profile.get("kakao_account")['email']
-            user, user_exist = User.objects.get_or_create(email = email, name = nickname)
+            user, user_exist = User.objects.get_or_create(email = email, name = nickname, address = "서울특별시 마포구 만리재옛길")
             encoded_jwt      = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
             return JsonResponse({"Authorization":encoded_jwt}, status = 200)   
         except KeyError:
