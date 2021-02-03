@@ -53,7 +53,7 @@ class ProductGroupListView(View):
         if sort_type:
             product_groups = product_groups.order_by(sort_type)
         
-        context[f"product_group_{category}_{search}_{sort_type}_{page}"] = [{
+        context[f"product_list"] = [{
             'id'              : product_group.id,
             'name'            : product_group.name,
             'price'           : product_group.price,
