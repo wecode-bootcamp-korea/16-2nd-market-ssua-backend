@@ -7,11 +7,12 @@ from django.views               import View
 from django.http                import JsonResponse
 from django.db.models           import Sum, F, ExpressionWrapper, IntegerField, Q
 from django.db.models.functions import Ceil
+from django.shortcuts           import redirect
 
 from decorators.utils   import login_required
 from .models            import OrderItem, Order
 from products.models    import Product
-from my_settings        import CLIENT_ID, ADDRESS_URL, COMPANY_LONGITUDE, COMPANY_LATITUDE, DELIVERY_PRICES
+from my_settings        import CLIENT_ID, ADDRESS_URL, COMPANY_LONGITUDE, COMPANY_LATITUDE, DELIVERY_PRICES, ADMIN_KEY, KAKAOPAY_URL
 
 LATITUDE_10KM        = 0.1
 LOGITUDU_10KM        = 0.15
@@ -154,3 +155,36 @@ class OrderView(View):
             return JsonResponse({"message":"PRODUCT_DOES_NOT_EXIST"}, status = 400)
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"}, status = 400)
+
+class KakaoPay(View):
+    @login_required
+    def post(self, request, order_id):
+        TAX_FREE             = 0.9
+        user                 = request.user
+        order                = Order.objects.get(id = order_id)
+        total_price          = user.get_total_price
+        first_product_name   = order.orderitem_set.first().product.name
+        product_count        = len(order.orderitem_set.all())
+
+        params = {
+            "cid"                : "TC0ONETIME",
+            "partner_order_id"   : "123334556",
+            "partner_user_id"    : user.id,
+            "item_name"          : f"{first_product_name}외 {product_count}개",
+            "quantity"           : "1",
+            "total_amount"       : total_price,
+            "tax_free_amount"    : int(total_price * TAX_FREE),
+            "approval_url"       : "http://127.0.0.1:8000",
+            "cancel_url"         : "http://127.0.0.1:8000",
+            "fail_url"           : "http://127.0.0.1:8000"
+        }
+
+        headers = {
+            "Authorization":f"KakaoAK {ADMIN_KEY}",
+            "content_type":"application/x-www-form-urlencoded;charset=utf-8"
+        }
+    
+        response         = requests.post(KAKAOPAY_URL, params = params, headers = headers)
+        response         = json.loads(response.text)
+        redirect_url     = response.get("next_redirect_pc_url")
+        return redirect(redirect_url)

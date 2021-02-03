@@ -5,7 +5,6 @@ from django.http        import JsonResponse
 from django.views       import View
 from django.db.models   import Count
 from decorators.utils   import login_required
-from django.core.cache  import cache
 
 from users.models     import User
 from .models          import (
@@ -34,6 +33,7 @@ class ProductGroupListView(View):
     def get(self, request):
         page = int(request.GET.get('page', 1))
 
+        context   = {}
         page_size = 16
         limit     = int(page_size * page)
         offset    = int(limit - page_size)
@@ -52,71 +52,63 @@ class ProductGroupListView(View):
 
         if sort_type:
             product_groups = product_groups.order_by(sort_type)
-
-        context = cache.get(f"product_group_{category}_{search}_{sort_type}_{page}")
-        if not context:
-            context = {}
-            context[f"product_group_{category}_{search}_{sort_type}_{page}"] = [{
-                'id'              : product_group.id,
-                'name'            : product_group.name,
-                'price'           : product_group.price,
-                'discount_rate'   : product_group.discount_rate,
-                'thumbnail'       : product_group.thumbnail,
-                'main_description': product_group.main_description
-            } for product_group in product_groups[offset:limit]]
-            cache.set(f"product_group_{category}_{search}_{sort_type}_{page}", context)
+        
+        context[f"product_group_{category}_{search}_{sort_type}_{page}"] = [{
+            'id'              : product_group.id,
+            'name'            : product_group.name,
+            'price'           : product_group.price,
+            'discount_rate'   : product_group.discount_rate,
+            'thumbnail'       : product_group.thumbnail,
+            'main_description': product_group.main_description
+        } for product_group in product_groups[offset:limit]]
         return JsonResponse(context, status=200)
 
 class ProductView(View):
     def get(self, request, product_group_id):
         try:
-            context = cache.get(f"product_detail_{product_group_id}")
-            if not context:
-                context = {}
-                product_group    = ProductGroup.objects.get(id = product_group_id)
-                product_packages = product_group.productgrouppackagetype_set.all()
+            product_group    = ProductGroup.objects.get(id = product_group_id)
+            product_packages = product_group.productgrouppackagetype_set.all()
+            context          = {}
+            context["result"] = {
+                "product_group_id"   : product_group.id,
+                "product_group_name" : product_group.name,
+                "sales_unit"         : product_group.sales_unit,
+                "thumbnail"          : product_group.thumbnail,
+                "delivery_type"      : product_group.delivery_type,
+                "information"        : product_group.information,
+                "main_description"   : product_group.main_description,
+                "detail_description" : product_group.detail_description,
+                "discount_rate"      : product_group.discount_rate,
 
-                context["result"] = {
-                    "product_group_id"   : product_group.id,
-                    "product_group_name" : product_group.name,
-                    "sales_unit"         : product_group.sales_unit,
-                    "thumbnail"          : product_group.thumbnail,
-                    "delivery_type"      : product_group.delivery_type,
-                    "information"        : product_group.information,
-                    "main_description"   : product_group.main_description,
-                    "detail_description" : product_group.detail_description,
-                    "discount_rate"      : product_group.discount_rate,
+                "package_type" : product_packages[0].package_type.name,
 
-                    "package_type" : product_packages[0].package_type.name,
+                "product_group_images" : [{
+                    "url" : image.url
+                } for image in product_group.productgroupimage_set.all()],
 
-                    "product_group_images" : [{
-                        "url" : image.url
-                    } for image in product_group.productgroupimage_set.all()],
+                "products" : [{
+                    "id"         : product.id,
+                    "name"       : product.name,
+                    "price"      : product.price,
+                    "sold_out"   : product.sold_out,
+                    "ingredient" : product.ingredient,
+                    "point"      : product.point
+                } for product in product_group.product_set.all()],
 
-                    "products" : [{
-                        "id"         : product.id,
-                        "name"       : product.name,
-                        "price"      : product.price,
-                        "sold_out"   : product.sold_out,
-                        "ingredient" : product.ingredient,
-                        "point"      : product.point
-                    } for product in product_group.product_set.all()],
+                "related_product" : [{
+                    "related_product_id"        : relate_product.related_product_group.id,
+                    "related_product_name"      : relate_product.related_product_group.name,
+                    "related_product_price"     : relate_product.related_product_group.price,
+                    "related_product_thumbnail" : relate_product.related_product_group.thumbnail
+                } for relate_product in product_group.relate.select_related("related_product_group")],
 
-                    "related_product" : [{
-                        "related_product_id"        : relate_product.related_product_group.id,
-                        "related_product_name"      : relate_product.related_product_group.name,
-                        "related_product_price"     : relate_product.related_product_group.price,
-                        "related_product_thumbnail" : relate_product.related_product_group.thumbnail
-                    } for relate_product in product_group.relate.all().select_related("related_product_group")],
-
-                    "question" :[{
-                        "product_group_id" : question.product_group.id,
-                        "question_id"      : question.id,
-                        "user_name"        : question.user.name,
-                        "title"            : question.title,
-                    } for question in product_group.question_set.all()]
-                }
-                cache.set(f"product_group_{product_group_id}", context)
+                "question" :[{
+                    "product_group_id" : question.product_group.id,
+                    "question_id"      : question.id,
+                    "user_name"        : question.user.name,
+                    "title"            : question.title,
+                } for question in product_group.question_set.all()]
+            }
             return JsonResponse(context, status=200)
 
         except ProductGroup.DoesNotExist:

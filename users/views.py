@@ -41,7 +41,7 @@ class UserSignInView(View):
 
             if bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
                 encoded_jwt = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-                return JsonResponse({"Authorization":encoded_jwt}, status = 200)
+                return JsonResponse({"message":"SUCCESS", "Authorization":encoded_jwt}, status = 200)
             return JsonResponse({"message":"WRONG_PASSWORD"}, status = 401)
         except User.DoesNotExist:
             return JsonResponse({"message":"USER_DOES_NOT_EXIST"}, status = 401)
