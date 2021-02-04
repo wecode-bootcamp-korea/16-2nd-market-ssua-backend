@@ -70,7 +70,7 @@ class ProductViewTest(TestCase):
             package_type_id  = package_pk
         )
 
-        Grade.objects.create(name = "일반", accur_rate = 1, id = 6)
+        Grade.objects.create(name = '일반', accur_rate = 1, id = 6)
 
         user = User.objects.create(
             email    = 'sua@wecode.com',
@@ -110,7 +110,7 @@ class ProductViewTest(TestCase):
 class QuestionViewTestCase(TestCase):
     @classmethod
     def setUpTestData(self):
-        Grade.objects.create(name = "일반", accur_rate = 1, id = 6)
+        Grade.objects.create(name = '일반', accur_rate = 1, id = 6)
         user = User.objects.create(
             email    = 'sua@wecode.com',
             password = 'code1234',
@@ -140,6 +140,10 @@ class QuestionViewTestCase(TestCase):
             content          = '유닛테스트~'
         )
 
+        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
+        global header
+        header = {"HTTP_Authorization" : token}
+
     def tearDown(self):
         Question.objects.all().delete()
         User.objects.all().delete()
@@ -149,9 +153,6 @@ class QuestionViewTestCase(TestCase):
     def test_question_post_success(self):
         user          = self.test_user
         product_group = self.product_group
-
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
 
         data = {
             "user_id"          : user.id,
@@ -166,24 +167,17 @@ class QuestionViewTestCase(TestCase):
         user          = self.test_user
         product_group = self.product_group
 
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
-
         data = {
             "user_id"          : user.id,
             "product_group_id" : product_group.id,
             "content"          : "key error"
             }
-
         response = client.post(f'/products/product-group/{self.product_group.id}/question', json.dumps(data), **header, content_type = "application/json")
         self.assertEqual(response.status_code, 400)
 
     def test_question_put_success(self):
         user          = self.test_user
         product_group = self.product_group
-
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
 
         data = {
             "user_id"          : user.id,
@@ -198,9 +192,6 @@ class QuestionViewTestCase(TestCase):
         user          = self.test_user
         product_group = self.product_group
 
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
-
         data = {
             "user_id"          : user.id,
             "product_group_id" : product_group.id,
@@ -214,14 +205,10 @@ class QuestionViewTestCase(TestCase):
         user          = self.test_user
         product_group = self.product_group
 
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
-
         data = {
-            "user_id" : user.id,
+            "user_id"          : user.id,
             "product_group_id" : product_group.id
         }
-
         response = client.delete(f'/products/product-group/{self.product_group.id}/question/{self.question.id}', json.dumps(data), **header, content_type = "application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -229,13 +216,9 @@ class QuestionViewTestCase(TestCase):
         user          = self.test_user
         product_group = self.product_group
 
-        token  = jwt.encode({"id":user.id}, key = SECRET, algorithm = ALGORITHM)
-        header = {"HTTP_Authorization" : token}
-
         data = {
-            "user_id" : user.id,
+            "user_id"          : user.id,
             "product_group_id" : product_group.id
         }
-
         response = client.delete(f'/products/product-group/{self.product_group.id}/question/3388', json.dumps(data), **header, content_type = "application/json")
         self.assertEqual(response.status_code, 400)
