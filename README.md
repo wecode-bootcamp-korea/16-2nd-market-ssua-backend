@@ -8,7 +8,7 @@
 
 ## Member 🕺🏻 <br>
 ### Front <a href="https://github.com/wecode-bootcamp-korea/16-2nd-market-ssua-frontend"> git repo </a> <br>
-정재윤 <a href="https://github.com/sbjeong222"> git repo </a> // 이필제 <a href="https://github.com/xxpiiiide"> git repo </a> // 문규찬 <a href="https://github.com/moonkyuchan"> git repo </a> // 김동하 <a href="https://github.com/finalslug"> git repo<br>
+정재윤 <a href="https://github.com/sbjeong222"> git repo </a> // 이필제 <a href="https://github.com/xxpiiiide"> git repo </a> // 문규찬 <a href="https://github.com/moonkyuchan"> git repo </a> // 김동하 <a href="https://github.com/finalslug"> git repo</a> <br>
 ### Back <a href="https://github.com/wecode-bootcamp-korea/16-2nd-market-ssua-backend"> git repo </a> <br>
 김준형 <a href="https://github.com/ddalkigum"> git repo </a> // 최수아 <a href="https://github.com/sue517"> git repo</a> <br>
 ## Back Technologies 🛠
