@@ -39,7 +39,7 @@ front / back 간의 의사 소통을 수월히 하기 위하여 Json API documen
 - self join 을 통해 상세페이지에서 연관된 상품리스트 확인 가능
 - 상품 검색, 필터
 - 상품 문의 CRUD
-- seed 를 이용헤 database 자동 생성 및 구축
+- seed 를 이용해 database 자동 생성 및 구축
 - 장바구니 기능
 - 소비자의 주소(location) 및 주문 최소 금액에 따른 배송비 추가/감소
 - kakao pay QR 결제
