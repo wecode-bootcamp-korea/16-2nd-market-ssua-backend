@@ -3,7 +3,7 @@
 안녕하세요, 마켓 컬리 [market kurly](https://www.kurly.com/shop/main/index.php) 사이트의 클론 코딩 프로젝트를 진행하게 된 `Team Market ssua` 입니다. 마켓컬리는 대한민국의 온라인 식재료 판매업체입니다. '문 앞 까지 신선함을 제공하는 샛별배송' 이라는 슬로건으로 새벽 배송을 특성화하여 바쁜 현대인들의 일상에 스며들게 되었습니다. 마켓컬리는 여러 식재료 뿐만 아니라 생활용품, 반려동물 용품까지 광범위하게 취급하며, 상품 그룹 마다 별도의 상품 종류를 갖추고 있어 모델링 단계부터 다른 사이트들과의 차별점을 느낄 수 있었습니다.<br>
 2주의 프로젝트 기간동안 User - Product - Order application 기능 구현에 힘써, 초기에 계획했던 기능들을 전부 구현하는데에 성공하였습니다. 계획된 기능들로는 로그인, 회원가입, 카카오를 이용한 소셜로그인, 상품 리스트, pagination, 장바구니 및 소비자의 주소 / 최소가격을 이용한 배송비 계산 등이 있습니다.
 ## Preview 
-[![team marketssua](https://images.velog.io/images/sue517/post/fe661ddf-7d57-4d03-84d4-d2f679d9efa2/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-02-06%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%204.29.42.png)]('https://youtu.be/ifrAm2Tn6PE')
+[![team marketssua](https://images.velog.io/images/sue517/post/fe661ddf-7d57-4d03-84d4-d2f679d9efa2/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-02-06%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%204.29.42.png)](https://youtu.be/ifrAm2Tn6PE)
 ##### 이미지를 클릭하면 영상으로 이동됩니다.
 
 ## Member 🕺🏻 <br>
